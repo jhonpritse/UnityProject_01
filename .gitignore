@@ -1,0 +1,16 @@
+/Library/*
+/UserSettings/*
+/ProjectSettings/*
+/Logs/*
+/obj/*
+/Packages/*
+/Assets/TextMesh Pro/*
+/Assets/Joystick Pack/*
+/Assets/Editor/*
+/Assets/AllIn1SpriteShader/* 
+/.idea/*
+*.csproj
+*.meta
+Project_01.sln
+Assets/Misc/Player_Physics.physicsMaterial2D
+*.psd
