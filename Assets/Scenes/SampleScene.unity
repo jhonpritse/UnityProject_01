@@ -298,6 +298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  flySpeed: 8
   jumpForce: 12
   feetPos: {fileID: 839590682}
   checkRadius: 0.3

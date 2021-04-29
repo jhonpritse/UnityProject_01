@@ -6,7 +6,11 @@ public class StateTrackerPlayer : MonoBehaviour
 
     #region Variables
 
-    private float switchModeCounter;
+    private float switchModeCounter; public float SwitchModeCounter
+    {
+        get => switchModeCounter;
+        set => switchModeCounter = value;
+    }
     public float switchModeTime;
 
     private bool canFlyMode; public bool CanFlyMode

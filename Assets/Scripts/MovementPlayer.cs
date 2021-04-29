@@ -8,8 +8,11 @@ public class MovementPlayer : MonoBehaviour
     
     private Rigidbody2D rb;
 
-    [SerializeField]
-    private float speed;
+    [Range(1, 15)]
+    [SerializeField] private float speed;
+    [Range(1, 15)]
+    [SerializeField] private float flySpeed;
+
     [SerializeField]
     private float jumpForce;
 
@@ -72,7 +75,7 @@ public class MovementPlayer : MonoBehaviour
             rb.gravityScale = 0;
             horizontal = joystick.Horizontal;
             vertical = joystick.Vertical;
-            rb.velocity = new Vector2( horizontal * speed, vertical * speed);
+            rb.velocity = new Vector2( horizontal * flySpeed, vertical * flySpeed);
         }
         else
         {
