@@ -30,6 +30,7 @@ public class Enemy1 : MonoBehaviour
             if (   player.GetComponent<StateTrackerPlayer>().Health > 1)
             {
                 enemyLogic.DestroyEnemy(gameObject);
+                player.GetComponent<AbilitiesPlayer>().setBomb = true;
             }
             enemyLogic.KnockBack(knockBackDuration, knockBackPower, player.gameObject, gameObject);
         }

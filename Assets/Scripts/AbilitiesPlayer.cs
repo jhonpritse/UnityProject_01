@@ -8,22 +8,24 @@ public class AbilitiesPlayer : MonoBehaviour
 
     [SerializeField]  private Transform destructibleParent; 
     [SerializeField] private float explodeDistance;
-    private StateTrackerPlayer stateTrackerPlayer;
 
+    [HideInInspector]
+    public bool setBomb;
     void Start()
     {
-        stateTrackerPlayer = GetComponent<StateTrackerPlayer>();
+     
     }
 
     void Update()
     {
-     print(stateTrackerPlayer.IsDamage);
-        // if (stateTrackerPlayer.IsDamage)
-        // {
-        //     Explode();
-        // }
+        if (setBomb)
+        {
+            Explode();
+        }
 
     }
+
+ 
 
     void Explode()
     {
@@ -32,9 +34,9 @@ public class AbilitiesPlayer : MonoBehaviour
             Transform destructibleObjects = destructibleParent.GetChild(i).gameObject.transform;
             Transform playerTransform = gameObject.GetComponent<Transform>();
             float distance = Vector3.Distance(destructibleObjects.position, playerTransform.position);
-                print(distance + " ===  " + destructibleObjects);
             if (distance <= explodeDistance)
             {
+           
                 DestroyObjects(destructibleParent.GetChild(i).gameObject);
             } 
         }
@@ -42,7 +44,7 @@ public class AbilitiesPlayer : MonoBehaviour
 
     void DestroyObjects(GameObject objects)
     {
+        setBomb = false;
         Destroy(objects);
-        //TODO add destroy particles
     }
 }

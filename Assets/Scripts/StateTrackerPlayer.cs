@@ -58,7 +58,7 @@ public class StateTrackerPlayer : MonoBehaviour
     public float damageResetTime;
     private float damageTimeCounter;
     
-
+    [SerializeField]   private  GameObject hitParticles;
     
     #endregion
     
@@ -94,6 +94,7 @@ public class StateTrackerPlayer : MonoBehaviour
             if (canBeDamage)
             {
                 health -= 1;
+                Instantiate(hitParticles, transform.position, Quaternion.identity);
                 canBeDamage = false;
             }
             if (damageTimeCounter <= 0)
