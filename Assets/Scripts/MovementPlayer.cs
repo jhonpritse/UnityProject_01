@@ -1,4 +1,5 @@
 
+using UnityEditor;
 using UnityEngine;
 
 
@@ -57,12 +58,18 @@ public class MovementPlayer : MonoBehaviour
     }
     void TouchInput()
     {
-        isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, ground);
+        // isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, ground);
+        isGrounded = Physics2D.OverlapBox(feetPos.position, new Vector2(3,1), 0,ground);
         if (Input.touchCount >0)
             touchInputs.TouchInput();
             
     }
-    
+  //
+  // void  OnDrawGizmosSelected()
+  //   {
+  //       Gizmos.color = Color.red;
+  //       Gizmos.DrawWireCube(feetPos.transform.position, new Vector2(3, 1));
+  //   }
     void FixedUpdate() 
     {
         Move();

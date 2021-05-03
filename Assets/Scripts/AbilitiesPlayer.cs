@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +12,6 @@ public class AbilitiesPlayer : MonoBehaviour
 
     [HideInInspector]
     public bool setBomb;
-    void Start()
-    {
-     
-    }
 
     void Update()
     {
@@ -40,6 +37,20 @@ public class AbilitiesPlayer : MonoBehaviour
                 DestroyObjects(destructibleParent.GetChild(i).gameObject);
             } 
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // for (int i = 0; i < destructibleParent.childCount; i++)
+        // {
+        //     Transform destructibleObjects = destructibleParent.GetChild(i).gameObject.transform;
+        //     Transform playerTransform = gameObject.GetComponent<Transform>();
+        //     float distance = Vector3.Distance(destructibleObjects.position, playerTransform.position);
+        //     Gizmos.color = Color.red;
+        //     var position = playerTransform.transform.position;
+        //     Gizmos.DrawLine(position, destructibleObjects.transform.position);
+        //     Gizmos.DrawWireSphere(position, explodeDistance);
+        // }
     }
 
     void DestroyObjects(GameObject objects)
