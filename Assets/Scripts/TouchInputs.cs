@@ -41,11 +41,11 @@ public class TouchInputs : MonoBehaviour
     {
         for (int i = 0; i < Input.touchCount; i++)
         {
-            Vector3 touchPosition = cam.ScreenToWorldPoint(Input.touches[i].position);
+            Vector3 touchPosition = cam.ScreenToViewportPoint(Input.touches[i].position);
             // //TODO remove gizmo
              // Debug.DrawLine(Vector3.zero, touchPosition, Color.magenta);
-             // Debug.Log(touchPosition);
-            if (touchPosition.x > 0  )
+              // Debug.Log(touchPosition.x);
+            if (touchPosition.x > 0.5f  )
             {
                 Touch touch = Input.GetTouch(i);
                 if (touch.phase == TouchPhase.Began || 

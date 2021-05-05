@@ -1,5 +1,4 @@
 
-using UnityEditor;
 using UnityEngine;
 
 
@@ -23,9 +22,12 @@ public class MovementPlayer : MonoBehaviour
     private bool isJumping;
 
     public Transform feetPos;
+    public Transform headPos;
     
     [SerializeField]
-    private float checkRadius;
+    private float checkFeetRadius;   
+    [SerializeField]
+    private float checkHeadRadius;
     [SerializeField]
     private LayerMask ground;
     [SerializeField]
@@ -40,7 +42,16 @@ public class MovementPlayer : MonoBehaviour
     private FloatingJoystick joystick;
     private TouchInputs touchInputs;
 
+    private bool facingRight;
     #endregion
+    
+    void  OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(headPos.position, checkHeadRadius);
+        Gizmos.DrawWireSphere(feetPos.position, checkFeetRadius);
+    }
+
     
     void Start()
     {
@@ -55,21 +66,39 @@ public class MovementPlayer : MonoBehaviour
     private void Update()
     {
         TouchInput();
+        FaceDirection();
+    }
+
+    void FaceDirection()
+    {
+        if (horizontal > 0 && facingRight == false)
+        {
+            Flip();
+        }else if (horizontal < 0 && facingRight)
+        {
+            Flip();
+        }
+    }
+    void Flip()
+    {
+        var transform1 = transform;
+        var localScale = transform1.localScale;
+        localScale = new Vector3(-localScale.x, localScale.y, 1);
+        transform1.localScale = localScale;
+        facingRight = !facingRight;
     }
     void TouchInput()
     {
-        // isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, ground);
-        isGrounded = Physics2D.OverlapBox(feetPos.position, new Vector2(3,1), 0,ground);
+      
+        isGrounded = Physics2D.OverlapCircle(feetPos.position, checkFeetRadius, ground);
+     
         if (Input.touchCount >0)
             touchInputs.TouchInput();
             
     }
-  //
-  // void  OnDrawGizmosSelected()
-  //   {
-  //       Gizmos.color = Color.red;
-  //       Gizmos.DrawWireCube(feetPos.transform.position, new Vector2(3, 1));
-  //   }
+  
+
+    
     void FixedUpdate() 
     {
         Move();
@@ -111,6 +140,10 @@ public class MovementPlayer : MonoBehaviour
             jumpTimeCounter -= Time.deltaTime;
         }
         else isJumping = false;
+        if (Physics2D.OverlapCircle(headPos.position, checkHeadRadius, ground))
+        {
+            isJumping = false;
+        }
     } 
     public void TouchPhaseEnd()
     {    
