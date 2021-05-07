@@ -1,4 +1,5 @@
 
+using Cinemachine;
 using UnityEngine;
 
 public class StateTrackerPlayer : MonoBehaviour
@@ -59,13 +60,20 @@ public class StateTrackerPlayer : MonoBehaviour
     private float damageTimeCounter;
     
     [SerializeField]   private  GameObject hitParticles;
-    
+    [SerializeField]   private  CinemachineVirtualCamera cam;
+    private float fovMinSize;
+    private float fovMaxSize;
+    [SerializeField] private float fovSizeModifier;
+    private float fov ;
     #endregion
     
     void Start()
     {
         ringColor = ringMode.GetComponent<SpriteRenderer>().color;
-      
+        fov = cam.m_Lens.FieldOfView;
+        fovMinSize = fov;
+        fovMaxSize = fov + 25;
+        
         switchModeCounter = switchModeTime;
         damageTimeCounter = damageResetTime;
     }
@@ -73,10 +81,32 @@ public class StateTrackerPlayer : MonoBehaviour
     void Update()
     {
         HealthTracker();
-
+        CamZoomWhenFly();
         RingTracker();
     }
-    
+   
+    void CamZoomWhenFly()
+    {
+        
+        if (canFlyMode)
+        {
+            if (cam.m_Lens.FieldOfView < fovMaxSize)
+            {
+                fov += fovSizeModifier * Time.deltaTime;
+            }
+            else fov = fovMaxSize;
+            cam.m_Lens.FieldOfView = fov;
+        }
+        else
+        {
+            if (cam.m_Lens.FieldOfView > fovMinSize)
+            {
+                fov -= fovSizeModifier * Time.deltaTime;
+            }
+            else fov = fovMinSize;
+            cam.m_Lens.FieldOfView = fov;
+        }
+    }
     void HealthTracker()
     {
         if (health == walkingModeHealth)
