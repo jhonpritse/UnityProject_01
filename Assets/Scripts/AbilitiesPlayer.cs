@@ -11,18 +11,17 @@ public class AbilitiesPlayer : MonoBehaviour
     [SerializeField] private float explodeDistance;
 
     [HideInInspector]
-    public bool setBomb;
+    public bool isExplode;
 
     void Update()
     {
-        if (setBomb)
+        if (isExplode)
         {
             Explode();
         }
 
     }
-
- 
+    
 
     void Explode()
     {
@@ -33,12 +32,12 @@ public class AbilitiesPlayer : MonoBehaviour
             float distance = Vector3.Distance(destructibleObjects.position, playerTransform.position);
             if (distance <= explodeDistance)
             {
-           
                 DestroyObjects(destructibleParent.GetChild(i).gameObject);
             } 
         }
+        isExplode = false;
     }
-
+    
     private void OnDrawGizmosSelected()
     {
         // for (int i = 0; i < destructibleParent.childCount; i++)
@@ -46,16 +45,21 @@ public class AbilitiesPlayer : MonoBehaviour
         //     Transform destructibleObjects = destructibleParent.GetChild(i).gameObject.transform;
         //     Transform playerTransform = gameObject.GetComponent<Transform>();
         //     float distance = Vector3.Distance(destructibleObjects.position, playerTransform.position);
-        //     Gizmos.color = Color.red;
+        //     Gizmos.color = Color.green;
         //     var position = playerTransform.transform.position;
-        //     Gizmos.DrawLine(position, destructibleObjects.transform.position);
-        //     Gizmos.DrawWireSphere(position, explodeDistance);
+        //
+        //     // Gizmos.DrawWireSphere(position, explodeDistance);
+        //     
+        //     if (distance <= explodeDistance)
+        //     {
+        //         Gizmos.DrawLine(position, destructibleObjects.transform.position);
+        //     } 
+        //     
         // }
     }
 
     void DestroyObjects(GameObject objects)
     {
-        setBomb = false;
         Destroy(objects);
     }
 }

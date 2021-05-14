@@ -17,7 +17,6 @@ public class Enemy1 : MonoBehaviour
     void Start()
     {
         enemyLogic = new EnemyLogic();
-
     }
 
    
@@ -30,7 +29,7 @@ public class Enemy1 : MonoBehaviour
             if (   player.GetComponent<StateTrackerPlayer>().Health > 1)
             {
                 enemyLogic.DestroyEnemy(gameObject);
-                player.GetComponent<AbilitiesPlayer>().setBomb = true;
+                player.GetComponent<AbilitiesPlayer>().isExplode = true;
             }
             enemyLogic.KnockBack(knockBackDuration, knockBackPower, player.gameObject, gameObject);
         }

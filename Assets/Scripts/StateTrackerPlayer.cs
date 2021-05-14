@@ -87,7 +87,6 @@ public class StateTrackerPlayer : MonoBehaviour
    
     void CamZoomWhenFly()
     {
-        
         if (canFlyMode)
         {
             if (cam.m_Lens.FieldOfView < fovMaxSize)

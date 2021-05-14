@@ -3140,23 +3140,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 7
   flySpeed: 9
-  jumpForce: 13
+  jumpForce: 18
   feetPos: {fileID: 839590682}
-  headPos: {fileID: 625008783}
   frontPos: {fileID: 1390032530}
   checkFeetRadius: 0.4
-  checkHeadRadius: 0.25
   checkFrontRadius: 0.39
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  jumpTime: 0.3
+  doubleJumpAmount: 1
   wallSlidingSpeed: 1.25
   xWallForce: 12
   yWallForce: 15
   wallJumpTime: 0.05
-  dashForce: 1000
-  dashTime: 0.2
+  dashForce: 35.77
 --- !u!114 &237286139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3184,10 +3181,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minSwipeTime: 0.05
-  maxSwipeTime: 0.3
-  minSwipeDistance: 15
-  swipeTime: 0
-  distance: {x: 0, y: 0}
+  maxSwipeTime: 1
+  minSwipeDistance: 10
+  maxDoubleTabTime: 0.2
 --- !u!114 &237286141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3202,7 +3198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destructibleParent: {fileID: 1195404690}
   explodeDistance: 4.5
-  setBomb: 0
+  isExplode: 0
 --- !u!1 &238531810
 GameObject:
   m_ObjectHideFlags: 0
@@ -3556,7 +3552,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253229473}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00000071525574, y: 2.3999991, z: -8}
+  m_LocalPosition: {x: -0.0000009536743, y: 2.3999991, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2093967206}
@@ -8041,7 +8037,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00000071525574, y: 2.3999991, z: -8}
+  m_LocalPosition: {x: -0.0000009536743, y: 2.3999991, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -11348,7 +11344,7 @@ Transform:
   - {fileID: 1324852039}
   - {fileID: 17922050}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &795349539
 GameObject:
@@ -12444,7 +12440,7 @@ Transform:
   m_Children:
   - {fileID: 291491624}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &864208537
 GameObject:
@@ -25526,7 +25522,7 @@ Transform:
   m_Children:
   - {fileID: 1126964617}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1687806752
 GameObject:
