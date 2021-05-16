@@ -57,9 +57,9 @@ public class MovementPlayer : MonoBehaviour
     public float wallJumpTime;
 
     public float dashForce;
-    // private float dashTimeCounter;
-    // public float dashTime;
 
+    
+    
     #endregion
     
     // void  OnDrawGizmos()
@@ -113,14 +113,15 @@ public class MovementPlayer : MonoBehaviour
         // JoystickLimiter();
         FaceDirection();
         WallTouching();
+        
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkFeetRadius, groundLayer);
+        
         if (isGrounded || (isWallJumping&& isTouchingFront))
         {
-
             doubleJumpAmount = doubleJumpStart;
         }
         
-        if (Input.touchCount >0) touchInputs.TouchInput();
+        if (Input.touchCount >0) touchInputs.TouchInputControl();
         
     }
     void WallTouching()
@@ -219,7 +220,7 @@ public class MovementPlayer : MonoBehaviour
     }
     public void TouchPhaseDoubleTap()
     {
-        Dash();
+      
     }
     #endregion
 
@@ -241,9 +242,33 @@ public class MovementPlayer : MonoBehaviour
     {
         
     }
+
+    public void Swipe()
+    {
+        Dash();
+    }
     #endregion
-
-
+    
+    public void ButtonJump()
+    {
+        //for wall jumping 
+        if (isWallSliding && isWallJumping == false)
+        {
+            isWallJumping = true;
+            Invoke(nameof(SetWallJumpingToFalse) , wallJumpTime);
+        }
+        //for jumping
+        if (isGrounded)
+        {
+            Jump();
+        }
+        else if (!isGrounded && doubleJumpAmount > 0)
+        {
+            //double jumping
+            doubleJumpAmount--;
+            Jump();
+        }
+    }
     void Jump()
     {
         if (stateTrackerPlayer.CanFlyMode == false)
@@ -252,24 +277,28 @@ public class MovementPlayer : MonoBehaviour
         }
     }
 
-    void Dash()
+    public void ButtonDash()
     {
-        
-        
         if (facingRight)
         {
-            rb.velocity = Vector2.right* dashForce;
-            print("doubled rihgt");
+            rb.AddForce(Vector2.right * (dashForce * 10));
         }
         else
         {
-            rb.velocity = Vector2.left* dashForce;
-            print("doubled left");
+            rb.AddForce(Vector2.left * (dashForce * 10));
+        }
+    }
+    void Dash()
+    {
+        if (facingRight)
+        {
+            rb.AddForce(Vector2.right * (dashForce * 10));
+        }
+        else
+        {
+            rb.AddForce(Vector2.left * (dashForce * 10));
         }
 
-      
-      
-        
     }
 
 }

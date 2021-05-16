@@ -32,18 +32,25 @@ public class TouchInputs : MonoBehaviour
     private Vector2 distance;
     private Camera cam;
     
+    private bool isDouble;
     private MovementPlayer movementPlayer;
+    
+    private CanvasMenu canvasMenu;
+    
     private void Start()
     {
         movementPlayer = GameObject.FindWithTag("Player").GetComponent<MovementPlayer>();
+        canvasMenu = GameObject.Find("Canvas").GetComponent<CanvasMenu>();
         cam = Camera.main;
     }
 
     void Move()
     {
         movementPlayer.TouchPhaseMove();
-        // print("Move");
     }
+
+    #region TouchControls
+    
 
     void DoubleTap()
     {
@@ -93,29 +100,40 @@ public class TouchInputs : MonoBehaviour
     }
     void SwipeUp()
     {
+        Swipe();
         movementPlayer.SwipeUp();
         // print("swipe UP");
     }
     void SwipeDown()
     {
+        Swipe();
         movementPlayer.SwipeDown();
         // print("swipe DOWN");
     }   
     void SwipeLeft()
     {
+        Swipe();
         movementPlayer.SwipeLeft();
         // print("swipe LEFT");
     }
     void SwipeRight()
-    {
+    {       
+        Swipe();
         movementPlayer.SwipeRight();
         // print("swipe RIGHT");
     }
 
-    private bool isDouble;
-    public void TouchInput()
+    void Swipe()
     {
-        for (int i = 0; i < Input.touchCount; i++)
+        movementPlayer.Swipe();
+    }
+    #endregion
+    
+    public void TouchInputControl()
+    {
+        if (!canvasMenu.IsButtonControl)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
         {
             Vector3 touchPosition = cam.ScreenToViewportPoint(Input.touches[i].position);
 
@@ -142,9 +160,8 @@ public class TouchInputs : MonoBehaviour
                 }
             }
         }
-        
-
-        if (isDouble)
+            
+            if (isDouble)
         {
             for (int i = 0; i < Input.touchCount; i++)
             {
@@ -154,9 +171,8 @@ public class TouchInputs : MonoBehaviour
                     DoubleTap();
                 }
             }
-
         }
-        else
+            else
         { 
             for (int i = 0; i < Input.touchCount; i++) 
             { 
@@ -239,7 +255,10 @@ public class TouchInputs : MonoBehaviour
 
             }//end of forloop
         }
+        }
+        
       
+        
     }
     
 }
