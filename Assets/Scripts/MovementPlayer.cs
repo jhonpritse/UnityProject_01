@@ -33,16 +33,18 @@ public class MovementPlayer : MonoBehaviour
     private float checkFrontRadius;   
     [SerializeField]
     private LayerMask groundLayer;
+
     [SerializeField]
     private int doubleJumpAmount;
+    private bool canDoubleJump;
     private int doubleJumpStart;
 
 
     private StateTrackerPlayer stateTrackerPlayer;
-    
+
     private float horizontal;
     private float vertical;
-    
+
     private FloatingJoystick joystick;
     private TouchInputs touchInputs;
 
@@ -50,7 +52,7 @@ public class MovementPlayer : MonoBehaviour
     private bool isTouchingFront;
     private bool isWallSliding;
     private bool isWallJumping;
-      
+
     public float wallSlidingSpeed;
     public float xWallForce;
     public float yWallForce;
@@ -58,21 +60,27 @@ public class MovementPlayer : MonoBehaviour
 
     public float dashForce;
 
-    
-    
     #endregion
-    
+
     // void  OnDrawGizmos()
+
     // {
+
     //     Gizmos.color = Color.red;
+
     //     Gizmos.DrawWireSphere(headPos.position, checkHeadRadius);
+
     //     Gizmos.color = Color.green;
+
     //     Gizmos.DrawWireSphere(feetPos.position, checkFeetRadius);
+
     //     Gizmos.color = Color.magenta;
+
     //     Gizmos.DrawWireSphere(frontPos.position, checkFrontRadius);
+
     // }
 
-    
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -83,7 +91,7 @@ public class MovementPlayer : MonoBehaviour
         doubleJumpStart = doubleJumpAmount;
 
     }
-    
+
     private void Update()
     {
         TouchInput();
@@ -97,33 +105,55 @@ public class MovementPlayer : MonoBehaviour
     }
 
     // void JoystickLimiter()
+
     // {
+
     //     if (stateTrackerPlayer.CanFlyMode )
+
     //     {
+
     //         joystick.AxisOptions = AxisOptions.Both;
+
     //        
+
     //     }
+
     //     else
+
     //     {
+
     //         joystick.AxisOptions = AxisOptions.Horizontal; 
+
     //     }
+
     // }
+
     void TouchInput()
     {
         // JoystickLimiter();
         FaceDirection();
         WallTouching();
+        DoubleJumpSetter();
         
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkFeetRadius, groundLayer);
-        
-        if (isGrounded || (isWallJumping&& isTouchingFront))
+        if (Input.touchCount >0) touchInputs.TouchInputControl();
+    }
+
+    void DoubleJumpSetter()
+    {
+        if (isGrounded || isWallSliding)
         {
             doubleJumpAmount = doubleJumpStart;
         }
-        
-        if (Input.touchCount >0) touchInputs.TouchInputControl();
-        
+        if (isGrounded || !isGrounded&&!isTouchingFront)
+        {
+            canDoubleJump = true;
+        }else if (!isGrounded && isTouchingFront)
+        {
+            canDoubleJump = false;
+        }
     }
+    
     void WallTouching()
     {
         isTouchingFront = Physics2D.OverlapCircle(frontPos.position, checkFrontRadius, groundLayer);
@@ -136,7 +166,8 @@ public class MovementPlayer : MonoBehaviour
     {
         if (isWallSliding)
         {
-            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+            var velocity = rb.velocity;
+            rb.velocity = new Vector2(velocity.x, Mathf.Clamp(velocity.y, -wallSlidingSpeed, float.MaxValue));
         }
     }
     void WallJumping()
@@ -188,23 +219,7 @@ public class MovementPlayer : MonoBehaviour
     #region Touch Phases
     public void TouchPhaseBegin()
     {
-        //for wall jumping 
-        if (isWallSliding && isWallJumping == false)
-        {
-            isWallJumping = true;
-            Invoke(nameof(SetWallJumpingToFalse) , wallJumpTime);
-        }
-        //for jumping
-        if (isGrounded)
-        {
-            Jump();
-        }
-        else if (!isGrounded && doubleJumpAmount > 0)
-        {
-            //double jumping
-            doubleJumpAmount--;
-            Jump();
-        }
+       Jump();
     } 
     public void TouchPhaseStationary()
     {
@@ -223,9 +238,8 @@ public class MovementPlayer : MonoBehaviour
       
     }
     #endregion
-
-
-    #region Swipes
+   
+    #region Swipes Phase
     public void SwipeUp()
     {
         
@@ -242,63 +256,59 @@ public class MovementPlayer : MonoBehaviour
     {
         
     }
-
     public void Swipe()
     {
         Dash();
     }
-    #endregion
     
+    #endregion
+
+    #region Buttons Controls
     public void ButtonJump()
+    {
+        Jump();
+    }
+    public void ButtonDash()
+    {
+        Dash();
+    }
+    #endregion
+  
+
+    void Jump()
     {
         //for wall jumping 
         if (isWallSliding && isWallJumping == false)
         {
             isWallJumping = true;
+            canDoubleJump = false;
+            print("double Jump");
             Invoke(nameof(SetWallJumpingToFalse) , wallJumpTime);
         }
         //for jumping
         if (isGrounded)
         {
-            Jump();
+            Jumping();
         }
-        else if (!isGrounded && doubleJumpAmount > 0)
+        else if (!isGrounded && doubleJumpAmount > 0 && canDoubleJump )
         {
             //double jumping
+            print("double Jump");
             doubleJumpAmount--;
-            Jump();
+            Jumping();
         }
     }
-    void Jump()
+    void Jumping()
     {
         if (stateTrackerPlayer.CanFlyMode == false)
         {
             rb.velocity = Vector2.up * jumpForce; 
         }
     }
-
-    public void ButtonDash()
-    {
-        if (facingRight)
-        {
-            rb.AddForce(Vector2.right * (dashForce * 10));
-        }
-        else
-        {
-            rb.AddForce(Vector2.left * (dashForce * 10));
-        }
-    }
     void Dash()
     {
-        if (facingRight)
-        {
-            rb.AddForce(Vector2.right * (dashForce * 10));
-        }
-        else
-        {
-            rb.AddForce(Vector2.left * (dashForce * 10));
-        }
-
+        if (facingRight) rb.AddForce(Vector2.right * (dashForce * 10));
+        else rb.AddForce(Vector2.left * (dashForce * 10));
     }
 
 }

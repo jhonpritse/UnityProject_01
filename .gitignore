@@ -16,3 +16,4 @@ Assets/Misc/Player_Physics.physicsMaterial2D
 *.psd
 /BuildAPK/*
 /Temp/*
+/Assets/Asset_Imports/*

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Saving_Game_Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,12 +14,22 @@ public class CanvasMenu : MonoBehaviour
     [SerializeField] private GameObject[] settingsMenuObjects;
     [SerializeField] private GameObject[] buttonsControlButtons;
 
+    private void OnEnable()
+    {
+        if (PlayerPrefs.HasKey("awake"))
+        {
+            LoadSettingsData();
+        }
+    }
 
+    private void OnDisable()
+    {
+        PlayerPrefs.SetInt("awake" , 1);
+    }
 
+    private bool isButtonControl;
 
-
-
-    private bool isButtonControl; public bool IsButtonControl
+    public bool IsButtonControl
     {
         get => isButtonControl;
         set => isButtonControl = value;
@@ -25,7 +37,7 @@ public class CanvasMenu : MonoBehaviour
     
     public void Update()
     {
-        if (isButtonControl)
+        if (IsButtonControl)
         {
             foreach (var buttons in buttonsControlButtons)
             {
@@ -45,7 +57,7 @@ public class CanvasMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public   void ReloadTestScene()
+    public void ReloadTestScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1;
@@ -53,6 +65,7 @@ public class CanvasMenu : MonoBehaviour
 
     public void PauseGame()
     {
+      SaveSettingsData();
         Time.timeScale = 0;
         foreach (var pauseMenu in pauseMenuObjects)
         {
@@ -83,6 +96,15 @@ public class CanvasMenu : MonoBehaviour
 
     public void SaveSettings()
     {
+        SaveSettingsData();
+        foreach (var settingsMenu in settingsMenuObjects)
+        {
+            settingsMenu.SetActive(false);
+        } 
+    }
+    public void NotSaveSettings()
+    {
+        LoadSettingsData();
         foreach (var settingsMenu in settingsMenuObjects)
         {
             settingsMenu.SetActive(false);
@@ -120,6 +142,7 @@ public class CanvasMenu : MonoBehaviour
         {
             //show joystick when playing
             GameObject.FindWithTag("GameController").GetComponent<FloatingJoystick>().enabled = true;
+            GameObject.FindWithTag("Player").GetComponent<MovementPlayer>().enabled = true;
             //make buttons intractable when resumed 
             foreach (var buttons in buttonsControlButtons)
             {
@@ -130,11 +153,24 @@ public class CanvasMenu : MonoBehaviour
         {
             //hide when paused 
             GameObject.FindWithTag("GameController").GetComponent<FloatingJoystick>().enabled = false;
+            GameObject.FindWithTag("Player").GetComponent<MovementPlayer>().enabled = false;
             //make buttons not be able to be intractable 
             foreach (var buttons in buttonsControlButtons)
             {
                 buttons.GetComponent<Button>().interactable = false;
             } 
         }
+    }
+
+    void SaveSettingsData()
+    {
+        SavingSystem.SaveSettings(this);
+    }
+
+    void LoadSettingsData()
+    {
+        SettingsData data = SavingSystem.LoadSettings();
+        //Settable variables
+        isButtonControl = data.isButtonControls;
     }
 }
