@@ -13,12 +13,16 @@ public class TouchInputs : MonoBehaviour
     private bool currentState;
     private int stateCounter;
 
-    public float minSwipeTime;
-    public float maxSwipeTime;
-    public float minSwipeDistance;
+    [SerializeField]
+    private float minSwipeTime;
+    [SerializeField]
+    private float maxSwipeTime;
+    [SerializeField]
+    private float minSwipeDistance;
 
 
-    public float maxDoubleTabTime;
+    [SerializeField]
+    private float maxDoubleTabTime;
     private float previousTapTime;
     
     private float swipeStartTime;

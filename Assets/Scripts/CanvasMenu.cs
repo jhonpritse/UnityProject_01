@@ -9,49 +9,42 @@ using UnityEngine.UI;
 public class CanvasMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pauseButton;
+    [SerializeField] private GameObject dashButton;
+    
     [SerializeField] private GameObject[] pauseMenuObjects;
     [SerializeField] private GameObject[] controlOptionObjects;
     [SerializeField] private GameObject[] settingsMenuObjects;
     [SerializeField] private GameObject[] buttonsControlButtons;
-
-    private void OnEnable()
-    {
-        if (PlayerPrefs.HasKey("awake"))
-        {
-            LoadSettingsData();
-        }
-    }
-
-    private void OnDisable()
-    {
-        PlayerPrefs.SetInt("awake" , 1);
-    }
-
-    private bool isButtonControl;
-
-    public bool IsButtonControl
+    private bool isButtonControl; public bool IsButtonControl
     {
         get => isButtonControl;
         set => isButtonControl = value;
     }
-    
+
+    private MovementPlayer movementPlayer;
+
+    private const string Key = "CanvasMenuFirstAwake";
+    private void OnEnable()
+    {
+        if (PlayerPrefs.HasKey(Key))
+        {
+            LoadSettingsData();
+        }
+
+        movementPlayer = GameObject.FindWithTag("Player").GetComponent<MovementPlayer>();
+    }
+    private void OnDisable()
+    {
+        PlayerPrefs.SetInt(Key , 1);
+    }
+
+
     public void Update()
     {
-        if (IsButtonControl)
-        {
-            foreach (var buttons in buttonsControlButtons)
-            {
-                buttons.SetActive(true);
-            } 
-        }
-        else
-        {
-            foreach (var buttons in buttonsControlButtons)
-            {
-                buttons.SetActive(false);
-            } 
-        }
+        HandleButtons();
+        HandleDash();
     }
+
     public void QuitApp()
     {
         Application.Quit();
@@ -62,7 +55,6 @@ public class CanvasMenu : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1;
     }
-
     public void PauseGame()
     {
       SaveSettingsData();
@@ -74,7 +66,6 @@ public class CanvasMenu : MonoBehaviour
         pauseButton.SetActive(false);
         HandleTouchWhenPaused();
     }
-
     public void ResumeGame()
     {
         foreach (var pauseMenu in pauseMenuObjects)
@@ -85,7 +76,6 @@ public class CanvasMenu : MonoBehaviour
         Time.timeScale = 1;
         HandleTouchWhenPaused();
     }
-
     public void Settings()
     {
         foreach (var settingsMenu in settingsMenuObjects)
@@ -93,7 +83,7 @@ public class CanvasMenu : MonoBehaviour
             settingsMenu.SetActive(true);
         }
     }
-
+    
     public void SaveSettings()
     {
         SaveSettingsData();
@@ -110,6 +100,7 @@ public class CanvasMenu : MonoBehaviour
             settingsMenu.SetActive(false);
         } 
     }
+    
     public void ChangeControlSettings()
     {
         foreach (var buttons in controlOptionObjects)
@@ -124,6 +115,7 @@ public class CanvasMenu : MonoBehaviour
             buttons.SetActive(false);
         }
     }
+    
     public void TouchControls()
     {
         isButtonControl = false;
@@ -134,10 +126,41 @@ public class CanvasMenu : MonoBehaviour
         isButtonControl = true;
         SaveControlSettings();
     }
+    
+    void HandleDash()
+    {
+        if (movementPlayer.DashAmount > 0 )
+        {
+            dashButton.SetActive(true);
+            if (movementPlayer.CanDash)
+            {
+                dashButton.GetComponent<Button>().interactable = true;
+            }else    dashButton.GetComponent<Button>().interactable = false;
+        } else
+        {
+            dashButton.SetActive(false);
+        }
+    }
+    void HandleButtons()
+    {
+        if (IsButtonControl)
+        {
+            foreach (var buttons in buttonsControlButtons)
+            {
+                buttons.SetActive(true);
+            } 
+        }
+        else
+        {
+            foreach (var buttons in buttonsControlButtons)
+            {
+                buttons.SetActive(false);
+            } 
+        }
 
+    }
     void HandleTouchWhenPaused()
     {
-    
         if (Time.timeScale.Equals(1))
         {
             //show joystick when playing
@@ -166,11 +189,10 @@ public class CanvasMenu : MonoBehaviour
     {
         SavingSystem.SaveSettings(this);
     }
-
     void LoadSettingsData()
     {
         SettingsData data = SavingSystem.LoadSettings();
         //Settable variables
-        isButtonControl = data.isButtonControls;
+        isButtonControl = data.IsButtonControls;
     }
 }

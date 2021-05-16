@@ -5,8 +5,10 @@ public class SpriteTrackerPlayer : MonoBehaviour
 {
     #region Variables
     
-    public GameObject walkMode;
-    public GameObject flyMode;
+    [SerializeField]
+    private GameObject walkMode;
+    [SerializeField]
+    private  GameObject flyMode;
     private StateTrackerPlayer stateTrackerPlayer ;
     
 

@@ -9,8 +9,8 @@ namespace Saving_Game_Data
     {
         
          static readonly string SettingsDataPath = Application.persistentDataPath + "/SettingsData.jpt";
+         static readonly string MovementDataPath = Application.persistentDataPath + "/Movement.jpt";
 
-         
          
          public static void SaveSettings(CanvasMenu canvasMenu)
         {
@@ -33,13 +33,40 @@ namespace Saving_Game_Data
             else
             {
                 Debug.LogError("no Path in " + SettingsDataPath);
-
                 return null;
             }
             
         }
          
          
+         public static void SaveMovementData(MovementPlayer movementPlayer)
+         {
+             BinaryFormatter formatter = new BinaryFormatter();
+             FileStream stream = new FileStream(MovementDataPath, FileMode.Create);
+             MovementPlayerData data = new MovementPlayerData(movementPlayer);
+             formatter.Serialize(stream,data);
+             stream.Close();
+         }
+         public static MovementPlayerData LoadMovementData()
+         {
+             if (File.Exists(MovementDataPath))
+             {
+                 BinaryFormatter formatter = new BinaryFormatter();
+                 FileStream stream = new FileStream(MovementDataPath, FileMode.Open);
+                 MovementPlayerData data = formatter.Deserialize(stream) as MovementPlayerData;
+                 stream.Close();
+                 return data;
+             }
+             else
+             {
+                 Debug.LogError("no Path in " + MovementDataPath);
+                 return null;
+             }
+            
+         }
+
+
+
          
         
     }

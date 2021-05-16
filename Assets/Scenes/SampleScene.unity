@@ -3937,7 +3937,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.05
+  m_LinearDrag: 0.3
   m_AngularDrag: 0.05
   m_GravityScale: 4.5
   m_Material: {fileID: 6200000, guid: cbc1f5bdc7beca84a9ca3abe1e95291a, type: 2}
@@ -4018,7 +4018,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 7
   flySpeed: 9
-  jumpForce: 18
+  jumpForce: 15
   feetPos: {fileID: 839590682}
   frontPos: {fileID: 1390032530}
   checkFeetRadius: 0.4
@@ -4032,6 +4032,8 @@ MonoBehaviour:
   yWallForce: 15
   wallJumpTime: 0.05
   dashForce: 1000
+  dashExpireTime: 30
+  dashMaxAmount: 2
 --- !u!114 &237286139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4076,7 +4078,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destructibleParent: {fileID: 1195404690}
   explodeDistance: 4.5
-  isExplode: 0
 --- !u!1 &238531810
 GameObject:
   m_ObjectHideFlags: 0
@@ -4355,6 +4356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &249138672
 Transform:
   m_ObjectHideFlags: 0
@@ -4616,6 +4618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &261220421
 Transform:
   m_ObjectHideFlags: 0
@@ -8230,6 +8233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &457454270
 Transform:
   m_ObjectHideFlags: 0
@@ -8860,6 +8864,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &496834709
 Transform:
   m_ObjectHideFlags: 0
@@ -10832,6 +10837,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &624272153
 Transform:
   m_ObjectHideFlags: 0
@@ -13838,6 +13844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &858417284
 Transform:
   m_ObjectHideFlags: 0
@@ -13851,7 +13858,7 @@ Transform:
   m_Children:
   - {fileID: 291491624}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &864208537
 GameObject:
@@ -16382,6 +16389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &982006353
 Transform:
   m_ObjectHideFlags: 0
@@ -22832,6 +22840,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseButton: {fileID: 308604696}
+  dashButton: {fileID: 0}
   pauseMenuObjects:
   - {fileID: 1195683456}
   controlOptionObjects:
@@ -22839,7 +22848,6 @@ MonoBehaviour:
   settingsMenuObjects:
   - {fileID: 1432351384}
   buttonsControlButtons:
-  - {fileID: 959638311}
   - {fileID: 1303683222}
 --- !u!1 &1324882520
 GameObject:
@@ -28002,6 +28010,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &1686563842
 Transform:
   m_ObjectHideFlags: 0
@@ -28015,7 +28024,7 @@ Transform:
   m_Children:
   - {fileID: 1126964617}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1687806752
 GameObject:
@@ -35674,6 +35683,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockBackDuration: 0.25
   knockBackPower: 25
+  destroyDelay: 0.285
 --- !u!4 &2109924236
 Transform:
   m_ObjectHideFlags: 0

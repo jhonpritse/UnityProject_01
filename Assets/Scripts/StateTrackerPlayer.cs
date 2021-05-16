@@ -12,7 +12,9 @@ public class StateTrackerPlayer : MonoBehaviour
         get => switchModeCounter;
         set => switchModeCounter = value;
     }
-    public float switchModeTime;
+    [SerializeField]
+    [Range(1, 10)]
+    private  float switchModeTime;
 
     private bool canFlyMode; public bool CanFlyMode
     {
@@ -36,34 +38,44 @@ public class StateTrackerPlayer : MonoBehaviour
     }
 
     
-    public GameObject ringMode;
+    [SerializeField]
+    private GameObject ringMode;
     private Color ringColor;
     [Range(0,10)] 
-    public float ringAlphaModifier;
+    [SerializeField]
+    private float ringAlphaModifier;
     [Range(0,10)] 
-    public float ringSizeModifier;
+    [SerializeField]
+    private float ringSizeModifier;
     [Range(5,15)] 
-    public float ringMaxSize;
+    [SerializeField]
+    private float ringMaxSize;
     [Range(-5,5)]
-    public float ringMinSize;
-
+    [SerializeField]
+    private float ringMinSize;
     
     private bool isDamage; public bool IsDamage
     {
         get => isDamage;
         set => isDamage = value;
     }
+    
     private bool canBeDamage = true;
     
-    [Range(0,2)]
-    public float damageResetTime;
+    [Range(0,1.5f)]
+    [SerializeField]
+    private float damageResetTime;
     private float damageTimeCounter;
     
-    [SerializeField]   private  GameObject hitParticles;
-    [SerializeField]   private  CinemachineVirtualCamera cam;
+    [SerializeField]  
+    private  GameObject hitParticles;
+    [SerializeField]  
+    private  CinemachineVirtualCamera cam;
     private float fovMinSize;
     private float fovMaxSize;
-    [SerializeField] private float fovSizeModifier;
+    [SerializeField] 
+    [Range(1, 180)]
+    private float fovSizeModifier;
     private float fov ;
     #endregion
     

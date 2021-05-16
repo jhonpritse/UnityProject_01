@@ -1,4 +1,6 @@
 
+using System;
+using Saving_Game_Data;
 using UnityEngine;
 
 
@@ -7,23 +9,24 @@ public class MovementPlayer : MonoBehaviour
     #region Variables
     
     private Rigidbody2D rb;
-
     [Range(1, 15)]
     [SerializeField] private float speed;
     [Range(1, 15)]
     [SerializeField] private float flySpeed;
 
     [SerializeField]
+    [Range(1, 25)]
     private float jumpForce;
-
     private float gravity;
     
     private bool isGrounded;
     // private bool isJumping;
 
-    public Transform feetPos;
+    [SerializeField]
+    private Transform feetPos;
     // public Transform headPos;
-    public Transform frontPos;
+    [SerializeField]
+    private Transform frontPos;
     
     [SerializeField]
     private float checkFeetRadius;   
@@ -53,33 +56,69 @@ public class MovementPlayer : MonoBehaviour
     private bool isWallSliding;
     private bool isWallJumping;
 
-    public float wallSlidingSpeed;
-    public float xWallForce;
-    public float yWallForce;
-    public float wallJumpTime;
+    [SerializeField]
+    [Range(0, 5)]
+    private float wallSlidingSpeed;
+    [SerializeField]
+    [Range(1, 25)]
+    private float xWallForce;
+    [SerializeField]
+    [Range(1, 25)]
+    private float yWallForce;
+    [SerializeField]
+    private float wallJumpTime;
 
-    public float dashForce;
+    [SerializeField]
+    [Range(500, 1500)]
+    private float dashForce;
 
+    private bool canDash; public bool CanDash
+    {
+        get => canDash;
+        set => canDash = value;
+    }
+    [SerializeField]
+    [Range(0,  60)]
+    private float dashExpireTime;
+    private float dashTimeStart;
+    private int dashAmount; public int DashAmount
+    {
+        get => dashAmount;
+        set => dashAmount = value;
+    }
+    
+    [SerializeField]
+    private int dashMaxAmount; public int DashMaxAmount
+    {
+        get => dashMaxAmount;
+        set => dashMaxAmount = value;
+    }
+
+    private const string Key = "MovementPlayerFirstAwake";
     #endregion
 
     // void  OnDrawGizmos()
-
     // {
-
     //     Gizmos.color = Color.red;
-
     //     Gizmos.DrawWireSphere(headPos.position, checkHeadRadius);
-
     //     Gizmos.color = Color.green;
-
     //     Gizmos.DrawWireSphere(feetPos.position, checkFeetRadius);
-
     //     Gizmos.color = Color.magenta;
-
     //     Gizmos.DrawWireSphere(frontPos.position, checkFrontRadius);
-
     // }
+    private void OnEnable()
+    {
+        if (PlayerPrefs.HasKey(Key))
+        {
+            LoadMovementPlayerData();
+        }
+    }
 
+    private void OnDisable()
+    {
+        PlayerPrefs.SetInt(Key , 1);
+        SaveMovementPlayerData();
+    }
 
     void Start()
     {
@@ -89,7 +128,7 @@ public class MovementPlayer : MonoBehaviour
         joystick = GameObject.FindWithTag("GameController").GetComponent<FloatingJoystick>();
         gravity = rb.gravityScale;
         doubleJumpStart = doubleJumpAmount;
-
+        dashTimeStart = dashExpireTime;
     }
 
     private void Update()
@@ -105,27 +144,16 @@ public class MovementPlayer : MonoBehaviour
     }
 
     // void JoystickLimiter()
-
     // {
-
     //     if (stateTrackerPlayer.CanFlyMode )
-
     //     {
-
     //         joystick.AxisOptions = AxisOptions.Both;
-
     //        
-
     //     }
-
     //     else
-
     //     {
-
     //         joystick.AxisOptions = AxisOptions.Horizontal; 
-
     //     }
-
     // }
 
     void TouchInput()
@@ -134,11 +162,27 @@ public class MovementPlayer : MonoBehaviour
         FaceDirection();
         WallTouching();
         DoubleJumpSetter();
-        
+        DashSetter();
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkFeetRadius, groundLayer);
         if (Input.touchCount >0) touchInputs.TouchInputControl();
     }
 
+    void DashSetter()
+    {
+        if (doubleJumpAmount == 0) canDash = true;
+        else canDash = false;
+
+        if (dashAmount > 0)
+        {
+            dashExpireTime -= Time.deltaTime;
+            if (dashExpireTime  <= 0)
+            {
+                dashAmount--;
+                dashExpireTime = dashTimeStart;
+            }
+        }
+        
+    }
     void DoubleJumpSetter()
     {
         if (isGrounded || isWallSliding)
@@ -197,7 +241,6 @@ public class MovementPlayer : MonoBehaviour
         facingRight = !facingRight;
     }
     
-
     void Move() 
     {
         //State Control Manager
@@ -273,7 +316,6 @@ public class MovementPlayer : MonoBehaviour
         Dash();
     }
     #endregion
-  
 
     void Jump()
     {
@@ -282,7 +324,6 @@ public class MovementPlayer : MonoBehaviour
         {
             isWallJumping = true;
             canDoubleJump = false;
-            print("double Jump");
             Invoke(nameof(SetWallJumpingToFalse) , wallJumpTime);
         }
         //for jumping
@@ -293,7 +334,6 @@ public class MovementPlayer : MonoBehaviour
         else if (!isGrounded && doubleJumpAmount > 0 && canDoubleJump )
         {
             //double jumping
-            print("double Jump");
             doubleJumpAmount--;
             Jumping();
         }
@@ -302,13 +342,31 @@ public class MovementPlayer : MonoBehaviour
     {
         if (stateTrackerPlayer.CanFlyMode == false)
         {
-            rb.velocity = Vector2.up * jumpForce; 
+            rb.velocity = Vector2.up * jumpForce;
         }
     }
     void Dash()
     {
-        if (facingRight) rb.AddForce(Vector2.right * (dashForce * 10));
-        else rb.AddForce(Vector2.left * (dashForce * 10));
+        if (canDash && dashAmount > 0)
+        {
+            if (facingRight) rb.AddForce(Vector2.right * (dashForce * 10));
+            else rb.AddForce(Vector2.left * (dashForce * 10));
+            dashAmount--;
+        }
+    
+    }
+    
+    
+    //saving Data
+    void SaveMovementPlayerData()
+    {
+        SavingSystem.SaveMovementData(this);
+    }
+    void LoadMovementPlayerData()
+    {
+        MovementPlayerData data = SavingSystem.LoadMovementData();
+        //Settable variables
+       //TODO set variables
     }
 
 }

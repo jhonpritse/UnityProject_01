@@ -7,12 +7,18 @@ public class AbilitiesPlayer : MonoBehaviour
 {
   
 
-    [SerializeField]  private Transform destructibleParent; 
-    [SerializeField] private float explodeDistance;
+    [SerializeField]
+    private Transform destructibleParent; 
+    [SerializeField]
+    [Range(1, 10)]
+    private float explodeDistance;
 
-    [HideInInspector]
-    public bool isExplode;
-
+    private bool isExplode; public bool IsExplode
+    {
+        get => isExplode;
+        set => isExplode = value;
+    }
+    
     void Update()
     {
         if (isExplode)

@@ -5,7 +5,6 @@ public class EnemyLogic
 {
 
     
-
     public void KnockBack(float kbDuration, float kbPower, GameObject moveAwayFrom, GameObject self )
     {
         float timer = 0;
@@ -18,8 +17,8 @@ public class EnemyLogic
       
     }
 
-    public void DestroyEnemy(GameObject gameObject)
+    public void DestroyEnemy(GameObject gameObject, float time)
     {
-        Object.Destroy(gameObject, .5f);
+        Object.Destroy(gameObject, time);
     }
 }
