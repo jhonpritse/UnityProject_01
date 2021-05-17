@@ -24,20 +24,31 @@ public class CanvasMenu : MonoBehaviour
     private MovementPlayer movementPlayer;
 
     private const string Key = "CanvasMenuFirstAwake";
+    
+    
+    
     private void OnEnable()
     {
+        if (SavingSystem.CreatePathIfNull())
+        {
+            SaveSettings();
+        }
         if (PlayerPrefs.HasKey(Key))
         {
             LoadSettingsData();
         }
 
-        movementPlayer = GameObject.FindWithTag("Player").GetComponent<MovementPlayer>();
+       
     }
     private void OnDisable()
     {
         PlayerPrefs.SetInt(Key , 1);
     }
 
+    public void Start()
+    {
+        movementPlayer = GameObject.FindWithTag("Player").GetComponent<MovementPlayer>();
+    }
 
     public void Update()
     {

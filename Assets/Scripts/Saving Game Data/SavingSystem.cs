@@ -8,10 +8,19 @@ namespace Saving_Game_Data
     public static class SavingSystem 
     {
         
-         static readonly string SettingsDataPath = Application.persistentDataPath + "/SettingsData.jpt";
-         static readonly string MovementDataPath = Application.persistentDataPath + "/Movement.jpt";
+         static readonly string SettingsDataPath = Application.persistentDataPath + "/1.jpt";
+         static readonly string MovementDataPath = Application.persistentDataPath + "/2.jpt";
 
+         public static bool CreatePathIfNull()
+         {
+             if (!File.Exists(SettingsDataPath)) return true;
+             if (!File.Exists(MovementDataPath)) return true;
+             
+             return false;
+             
+         }
          
+
          public static void SaveSettings(CanvasMenu canvasMenu)
         {
             BinaryFormatter formatter = new BinaryFormatter();
