@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using Pathfinding;
+using UnityEditor;
 
 public class Enemy1 : MonoBehaviour
 {
@@ -46,12 +47,12 @@ public class Enemy1 : MonoBehaviour
         {
            //player is within range of enemy 
            // aiPath.canSearch = true;
-           print("player is with in sight");
+           // print("player is with in sight");
         }
         else
         {
             // aiPath.canSearch = false;
-            print("player is NOT seen");
+            // print("player is NOT seen");
         }
     }
 
@@ -67,29 +68,38 @@ public class Enemy1 : MonoBehaviour
         HitPlayerLogic(player);
     }
 
-    void HitPlayerLogic(Collider2D player)
+    void HitPlayerLogic(Collider2D _object)
     {
-        if (player.gameObject.tag.Equals("Player"))
+        if (_object.gameObject.tag.Equals("Player"))
         {
-            MovementPlayer playerMovementPlayer = player.GetComponent<MovementPlayer>();
-            AbilitiesPlayer playerAbilitiesPlayer = player.GetComponent<AbilitiesPlayer>();
-            StateTrackerPlayer playerStateTrackerPlayer = player.GetComponent<StateTrackerPlayer>();
+            MovementPlayer playerMovementPlayer = _object.GetComponent<MovementPlayer>();
+            AbilitiesPlayer playerAbilitiesPlayer = _object.GetComponent<AbilitiesPlayer>();
+            StateTrackerPlayer playerStateTrackerPlayer = _object.GetComponent<StateTrackerPlayer>();
             
             playerStateTrackerPlayer.IsDamage = true;
             if (   playerStateTrackerPlayer.Health > 1)
             {
                 enemyLogic.DestroyEnemy(gameObject, destroyDelay);
+                
                 playerAbilitiesPlayer.IsExplode = true;
+                GetComponent<EnemyPathFindingAI>().enabled = false;
                 
                 if ( playerMovementPlayer.DashAmount <= playerMovementPlayer.DashMaxAmount )
                 {
                     playerMovementPlayer.DashAmount++;
                 }
+       
             }
             
-            enemyLogic.KnockBack(knockBackDuration, knockBackPower, player.gameObject, gameObject);
+            enemyLogic.KnockBack(knockBackDuration, knockBackPower, _object.gameObject, gameObject);
+            Invoke(nameof(ScanNewPath), .0005f);
         }
     }
-    
+
+    void ScanNewPath()
+    {
+        AstarPath astarPath = GameObject.FindWithTag("PathFindingAI").GetComponent<AstarPath>();
+        astarPath.Scan();
+    }
     
 }

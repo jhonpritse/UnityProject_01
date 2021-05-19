@@ -349,8 +349,9 @@ public class MovementPlayer : MonoBehaviour
     {
         if (canDash && dashAmount > 0)
         {
-            if (facingRight) rb.AddForce(Vector2.right * (dashForce * 10));
-            else rb.AddForce(Vector2.left * (dashForce * 10));
+            if (facingRight)
+                rb.AddForce(Vector2.right * (dashForce * 10 * Time.deltaTime) );
+            else rb.AddForce(Vector2.left * (dashForce * 10 * Time.deltaTime));
             dashAmount--;
         }
     

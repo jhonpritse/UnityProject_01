@@ -1,9 +1,9 @@
 
 using UnityEngine;
-
 public class EnemyLogic
 {
-
+    
+    
     
     public void KnockBack(float kbDuration, float kbPower, GameObject moveAwayFrom, GameObject self )
     {
@@ -21,4 +21,8 @@ public class EnemyLogic
     {
         Object.Destroy(gameObject, time);
     }
+
+    
+    
+    
 }
