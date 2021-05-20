@@ -1,4 +1,5 @@
 
+using System.Runtime.InteropServices;
 using UnityEngine;
 public class EnemyLogic
 {
@@ -14,7 +15,6 @@ public class EnemyLogic
             Vector2 dir = (moveAwayFrom.transform.position - self.transform.position).normalized;
             self.GetComponent<Rigidbody2D>().AddForce(-dir * kbPower);
         }
-      
     }
 
     public void DestroyEnemy(GameObject gameObject, float time)
@@ -22,7 +22,21 @@ public class EnemyLogic
         Object.Destroy(gameObject, time);
     }
 
+    public void PatrolAreaRandom( Transform rb, float speed, Transform[] patrolPoints)
+    {
+        int wayPoint = Random.Range(0, patrolPoints.Length);
+       
+        
+       
+        
+    }
     
-    
+    public void PatrolAreaIncrement( Transform rb, float speed, Transform[] patrolPoints)
+    {
+        int wayPoint = Random.Range(0, patrolPoints.Length);
+        
+        Debug.Log(wayPoint);
+        
+    }
     
 }

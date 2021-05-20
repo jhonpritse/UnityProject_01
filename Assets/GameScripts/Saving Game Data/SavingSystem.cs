@@ -1,9 +1,9 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Player.Scripts;
 using UnityEngine;
 
-
-namespace Saving_Game_Data
+namespace GameScripts.Saving_Game_Data
 {
     public static class SavingSystem 
     {

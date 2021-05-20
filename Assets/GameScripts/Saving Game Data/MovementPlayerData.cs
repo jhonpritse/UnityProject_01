@@ -1,5 +1,7 @@
 
-namespace Saving_Game_Data
+using Player.Scripts;
+
+namespace GameScripts.Saving_Game_Data
 {
     [System.Serializable]
     public class MovementPlayerData

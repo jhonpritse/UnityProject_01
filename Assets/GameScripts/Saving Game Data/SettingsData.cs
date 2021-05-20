@@ -1,4 +1,4 @@
-namespace Saving_Game_Data
+namespace GameScripts.Saving_Game_Data
 {
     [System.Serializable]
     public class SettingsData
