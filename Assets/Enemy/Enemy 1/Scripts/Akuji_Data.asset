@@ -19,12 +19,12 @@ MonoBehaviour:
   knockBackDuration: 0.3
   destroyDelay: 0.3
   knockBackPower: 24
-  amountPatrolPoints: 4
+  amountPatrolPoints: 15
   patrolPoints: {fileID: 8711137014535345981, guid: 4da38f44b9526364491f5f3b42fff285, type: 3}
   nextWaypointDistance: 1.25
-  speed: 25
+  speed: 60
   gravity: 0
-  linearDrag: 1.14
+  linearDrag: 1
   collisionDetectionMode2D: 1
   rigidbodyConstraints2D: 4
   physicsMaterial2D: {fileID: 6200000, guid: 5c7f3cfc46527e14db38f5c6cd685d03, type: 2}

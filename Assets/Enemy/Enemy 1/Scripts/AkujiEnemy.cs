@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 using Pathfinding;
 using Player.Scripts;
+using UnityEditor;
 using Random = UnityEngine.Random;
 
 
@@ -33,50 +34,107 @@ public class AkujiEnemy : MonoBehaviour
         [HideInInspector] public bool isSpawned;
       
 
-        private Transform[] patrolPosition;
-        
+        [SerializeField] private Transform[] patrolPosition;
+
         private Transform waypointParent;
+        private int wayPoint;
+        private bool isNewPoint;
         [SerializeField] private EnemyDataObject enemyData;
         #endregion
     
    
-        // private void OnDrawGizmos()
-        // {
-        //     Gizmos.color = Color.red;
-        //     Gizmos.DrawWireSphere(transform.position, enemyData.detectionRange);
-        //     if (isSpawned)
-        //     {
-        //         for (int i = 0; i < enemyData.amountPatrolPoints; i++)
-        //         {
-        //             GameObject point1;
-        //             GameObject point2;
-        //            
-        //             string patrolName=i+1 + "_"+ gameObject.name+ "_PatrolPoints";
-        //             GameObject patrolPoints = waypointParent.transform.Find(patrolName).gameObject;
-        //             
-        //             point1 =waypointParent.transform.Find(patrolName).gameObject;
-        //             
-        //             if (i+1 == enemyData.amountPatrolPoints)
-        //             {
-        //                 point2 = waypointParent.transform.Find(patrolName).gameObject;
-        //             }
-        //             else
-        //             {
-        //                  patrolName=i+2 + "_"+ gameObject.name+ "_PatrolPoints";
-        //                 point2 =  waypointParent.transform.Find(patrolName).gameObject;
-        //             }
-        //
-        //
-        //             Gizmos.color = new Color(0, 1, 0.5f, .15f);
-        //             Gizmos.DrawLine(point1.transform.position, point2.transform.position);
-        //         }     
-        //     }
-        //     
-        // }
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, enemyData.detectionRange);
+            waypointParent = GameObject.Find("WayPoints").gameObject.transform;
+            if (isSpawned)
+            {
+             
+                if (EditorApplication.isPlaying && patrolPosition.Length > 0 )
+                {
+                    for (int i = 0; i < enemyData.amountPatrolPoints; i++)
+                    {
+                        Vector2 point1;
+                        Vector2 point2;
+                  
+                        point1 = patrolPosition[i].position;
+                 
+                        if (i+1 == enemyData.amountPatrolPoints)
+                        {
+                      
+                            point2 = patrolPosition[0].position;
+                        }
+                        else
+                        {
+                     
+                            point2 = patrolPosition[i+1].position;
+                        }
+               
+                        Gizmos.color = new Color(0, 1, 0.5f, .25f);
+                        Gizmos.DrawLine(point1, point2);
+                        Gizmos.color = new Color(1, 1 ,0.5f, .5f);
+                        Gizmos.DrawSphere(point1, .5f);
+                    
+                    } 
+                }
+                else
+                {
+                    for (int i = 0; i < enemyData.amountPatrolPoints; i++)
+                    {
+                        Transform point1;
+                        Transform point2;
+                        string patrolName=gameObject.name +"_"+ (i+1) + "_PatrolPoints";
+                   
+                        point1 =waypointParent.transform.Find(patrolName).transform;
+                 
+                        if (i+1 == enemyData.amountPatrolPoints)
+                        {
+                            patrolName=gameObject.name +"_"+ (1) + "_PatrolPoints";
+                            point2 = waypointParent.transform.Find(patrolName).transform;
+                        }
+                        else
+                        {
+                            patrolName=gameObject.name +"_"+ (i+2) + "_PatrolPoints";
+                            point2 =  waypointParent.transform.Find(patrolName).transform;
+                        }
+               
+                        Gizmos.color = new Color(0, 1, 0.5f, .25f);
+                        Gizmos.DrawLine(point1.position, point2.position);
+                        Gizmos.color = new Color(1, 1 ,0.5f, .5f);
+                        Gizmos.DrawSphere(point1.position, .3f);
+                    
+                    }     
+                }
+
+             
+            }
+
+        }
         void Awake()
         {
             SetUpComponents();
-         
+            SetUpPatrolPoints();
+
+        }
+
+     
+
+        void SetUpPatrolPoints()
+        {
+            isNewPoint = true;
+            wayPoint = 0;
+            waypointParent = GameObject.Find("WayPoints").gameObject.transform;
+            for (int i = 0; i < enemyData.amountPatrolPoints; i++)
+            {
+                string pointName=gameObject.name +"_"+ (i+1) + "_PatrolPoints";
+                GameObject point = waypointParent.transform.Find(pointName).gameObject;
+            
+                patrolPosition[i] = point.transform;
+                
+            }
+            
+           
         }
         void SetUpComponents()
         {
@@ -106,16 +164,17 @@ public class AkujiEnemy : MonoBehaviour
             
             patrolPosition = new Transform[enemyData.amountPatrolPoints];
             waypointParent = GameObject.Find("WayPoints").gameObject.transform;
+          
         }
         
-        public void SetUpPatrolPoints()
+        public void SpawnPatrolPoints()
         {
             waypointParent = GameObject.Find("WayPoints").gameObject.transform;
             for (int i = 0; i < enemyData.amountPatrolPoints; i++)
             {
-                GameObject patrolPoints = Instantiate(enemyData.patrolPoints,transform.position , Quaternion.identity); 
+                GameObject patrolPoints = Instantiate(enemyData.patrolPoints,transform.position , Quaternion.identity);
                 patrolPoints.transform.parent = waypointParent;
-                patrolPoints.name =i+1 + "_"+ gameObject.name+ "_PatrolPoints";
+                patrolPoints.name = gameObject.name +"_"+  (i+1) + "_PatrolPoints";
             }
             isSpawned = true;
         }
@@ -123,7 +182,7 @@ public class AkujiEnemy : MonoBehaviour
        {
            for (int i = 0; i < enemyData.amountPatrolPoints; i++)
            {
-               string patrolName=i+1 + "_"+ gameObject.name+ "_PatrolPoints";
+               string patrolName=gameObject.name +"_"+  (i+1) + "_PatrolPoints";
                GameObject patrolPoints = waypointParent.transform.Find(patrolName).gameObject;
                DestroyImmediate(patrolPoints);
                isSpawned = false;
@@ -147,39 +206,47 @@ public class AkujiEnemy : MonoBehaviour
             }
             else
             {
-               PatrolState();
+                PatrolState();
             }
         }
 
         void PlayerInRange()
         {
-        Debug.Log("Player in range " + playerDistance);
+      
         }
 
         void PatrolState()
         {
-            if (patrolPosition.Length <= enemyData.amountPatrolPoints)
-            {
-                for (int i = 0; i < enemyData.amountPatrolPoints; i++)
-                {
-                    string patrolName=i+1 + "_"+ gameObject.name+ "_PatrolPoints";
-                    patrolPosition[i] = waypointParent.transform.Find(patrolName).gameObject.transform;
-                }
-            }
+            // if (patrolPosition.Length <= enemyData.amountPatrolPoints)
+            // {
+            //     for (int i = 0; i < enemyData.amountPatrolPoints; i++)
+            //     {
+            //         string patrolName=i+1 + "_"+ gameObject.name+ "_PatrolPoints";
+            //         patrolPosition[i] = waypointParent.transform.Find(patrolName).gameObject.transform;
+            //     }
+            // }
+            //
+            // transform.position = Vector3.MoveTowards(transform.position, patrolPosition[0],enemyData.speed  * Time.deltaTime);
             
-            InvokeRepeating(nameof(StartPathFind), 0f, 2f);
-            
+            // InvokeRepeating(nameof(StartPathFind), 0f, .5f);
+            StartPathFind();
         }
 
         void StartPathFind()
         {
-            int wayPoint = Random.Range(0, patrolPosition.Length);
-            epf.StartPathFind(patrolPosition[wayPoint].transform);
+            // int wayPoint = Random.Range(0, patrolPosition.Length);
+             epf.StartPathFind(patrolPosition[wayPoint].transform);
         }
-        private void OnTriggerEnter2D(Collider2D player)
+        private void OnTriggerEnter2D(Collider2D objCollider2D)
         {
-            HitPlayerLogic(player);
+            HitPlayerLogic(objCollider2D);
+            HitPatrolPointLogic(objCollider2D);
         }
+        private void OnTriggerExit2D(Collider2D objCollider2D)
+        {
+            HitExitPatrolPointLogic(objCollider2D);
+        }
+
         void HitPlayerLogic(Collider2D _object)
         {
             if (_object.gameObject.tag.Equals("Player"))
@@ -207,7 +274,23 @@ public class AkujiEnemy : MonoBehaviour
                 Invoke(nameof(DelayedPlayerHit), .0005f);
             }
         }
-
+        void HitPatrolPointLogic(Collider2D _object)
+        {
+            if (_object.CompareTag("PatrolPoints") && isNewPoint)
+            {
+                var nextPoint = wayPoint + 1;
+                wayPoint = nextPoint == patrolPosition.Length ? 0 : nextPoint;
+                isNewPoint = false;
+            }
+        }
+        void HitExitPatrolPointLogic(Collider2D _object)
+        {
+            if (_object.CompareTag("PatrolPoints"))
+            {
+                isNewPoint = true;
+            }
+        }
+        
         void DelayedPlayerHit()
         {
             isHitPlayer = true;

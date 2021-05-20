@@ -23,7 +23,7 @@ namespace GameScripts.Editor
             {
                 if (GUILayout.Button("GENERATE - Patrol Points"))
                 {
-                    akujiEnemy.SetUpPatrolPoints();
+                    akujiEnemy.SpawnPatrolPoints();
                 }
             }
             
